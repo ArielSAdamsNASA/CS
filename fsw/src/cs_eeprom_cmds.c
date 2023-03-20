@@ -52,7 +52,7 @@ void CS_DisableEepromCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -82,7 +82,7 @@ void CS_EnableEepromCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -116,7 +116,7 @@ void CS_ReportBaselineEntryIDEepromCmd(const CS_EntryCmd_t *CmdPtr)
     CS_Res_EepromMemory_Table_Entry_t ResultsEntry;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         EntryID = CmdPtr->EntryID;
 
@@ -174,7 +174,7 @@ void CS_RecomputeBaselineEepromCmd(const CS_EntryCmd_t *CmdPtr)
     uint16          State       = CS_STATE_EMPTY;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         EntryID = CmdPtr->EntryID;
 
@@ -256,7 +256,7 @@ void CS_EnableEntryIDEepromCmd(const CS_EntryCmd_t *CmdPtr)
     uint16                             State        = CS_STATE_EMPTY;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -322,7 +322,7 @@ void CS_DisableEntryIDEepromCmd(const CS_EntryCmd_t *CmdPtr)
     uint16                             State        = CS_STATE_EMPTY;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -392,7 +392,7 @@ void CS_GetEntryIDEepromCmd(const CS_GetEntryIDCmd_t *CmdPtr)
     CS_Res_EepromMemory_Table_Entry_t  ResultsEntry;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         StartOfResultsTable = CS_AppData.ResEepromTblPtr;
 

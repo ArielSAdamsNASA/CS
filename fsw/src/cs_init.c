@@ -47,7 +47,7 @@ int32 CS_SbInit(void)
     CS_AppData.PipeDepth = CS_PIPE_DEPTH;
 
     /* Initialize housekeeping packet */
-    CFE_MSG_Init(&CS_AppData.HkPacket.TlmHeader.Msg, CFE_SB_ValueToMsgId(CS_HK_TLM_MID), sizeof(CS_HkPacket_t));
+    CFE_MSG_Init(CFE_MSG_PTR(CS_AppData.HkPacket), CFE_SB_ValueToMsgId(CS_HK_TLM_MID), sizeof(CS_HkPacket_t));
 
     /* Create Software Bus message pipe */
     Result = CFE_SB_CreatePipe(&CS_AppData.CmdPipe, CS_AppData.PipeDepth, CS_AppData.PipeName);
@@ -106,7 +106,7 @@ int32 CS_InitAllTables(void)
                               (void *)&CS_AppData.DefEepromTblPtr, (void *)&CS_AppData.ResEepromTblPtr, CS_EEPROM_TABLE,
                               CS_DEF_EEPROM_TABLE_NAME, CS_RESULTS_EEPROM_TABLE_NAME, CS_MAX_NUM_EEPROM_TABLE_ENTRIES,
                               CS_DEF_EEPROM_TABLE_FILENAME, &CS_AppData.DefaultEepromDefTable,
-                              sizeof(CS_Def_EepromMemory_Table_Entry_t), sizeof(CS_Res_EepromMemory_Table_Entry_t),
+                              sizeof(CS_EepromTableEntry_t), sizeof(CS_Res_EepromMemory_Table_Entry_t),
                               CS_ValidateEepromChecksumDefinitionTable);
 
     if (ResultInit != CFE_SUCCESS)
@@ -122,7 +122,7 @@ int32 CS_InitAllTables(void)
                                   (void *)&CS_AppData.DefMemoryTblPtr, (void *)&CS_AppData.ResMemoryTblPtr,
                                   CS_MEMORY_TABLE, CS_DEF_MEMORY_TABLE_NAME, CS_RESULTS_MEMORY_TABLE_NAME,
                                   CS_MAX_NUM_MEMORY_TABLE_ENTRIES, CS_DEF_MEMORY_TABLE_FILENAME,
-                                  &CS_AppData.DefaultMemoryDefTable, sizeof(CS_Def_EepromMemory_Table_Entry_t),
+                                  &CS_AppData.DefaultMemoryDefTable, sizeof(CS_EepromTableEntry_t),
                                   sizeof(CS_Res_EepromMemory_Table_Entry_t), CS_ValidateMemoryChecksumDefinitionTable);
 
         if (ResultInit != CFE_SUCCESS)
@@ -155,7 +155,7 @@ int32 CS_InitAllTables(void)
                                   (void *)&CS_AppData.DefTablesTblPtr, (void *)&CS_AppData.ResTablesTblPtr,
                                   CS_TABLES_TABLE, CS_DEF_TABLES_TABLE_NAME, CS_RESULTS_TABLES_TABLE_NAME,
                                   CS_MAX_NUM_TABLES_TABLE_ENTRIES, CS_DEF_TABLES_TABLE_FILENAME,
-                                  &CS_AppData.DefaultTablesDefTable, sizeof(CS_Def_Tables_Table_Entry_t),
+                                  &CS_AppData.DefaultTablesDefTable, sizeof(CS_EepromTableEntry_t),
                                   sizeof(CS_Res_Tables_Table_Entry_t), CS_ValidateTablesChecksumDefinitionTable);
 
         if (ResultInit != CFE_SUCCESS)

@@ -49,8 +49,8 @@ int32 CS_ValidateEepromChecksumDefinitionTable(void *TblPtr)
 {
     int32                              Result       = CFE_SUCCESS;
     int32                              Status       = OS_ERROR;
-    CS_Def_EepromMemory_Table_Entry_t *StartOfTable = NULL;
-    CS_Def_EepromMemory_Table_Entry_t *OuterEntry   = NULL;
+    CS_EepromTableEntry_t *StartOfTable = NULL;
+    CS_EepromTableEntry_t *OuterEntry   = NULL;
     int32                              OuterLoop    = 0;
     uint32                             StateField   = 0;
     cpuaddr                            Address      = 0;
@@ -59,7 +59,7 @@ int32 CS_ValidateEepromChecksumDefinitionTable(void *TblPtr)
     int32                              BadCount     = 0;
     int32                              EmptyCount   = 0;
 
-    StartOfTable = (CS_Def_EepromMemory_Table_Entry_t *)TblPtr;
+    StartOfTable = (CS_EepromTableEntry_t *)TblPtr;
 
     for (OuterLoop = 0; OuterLoop < CS_MAX_NUM_EEPROM_TABLE_ENTRIES; OuterLoop++)
     {
@@ -129,8 +129,8 @@ int32 CS_ValidateMemoryChecksumDefinitionTable(void *TblPtr)
 {
     int32                              Result       = CFE_SUCCESS;
     int32                              Status       = OS_ERROR;
-    CS_Def_EepromMemory_Table_Entry_t *StartOfTable = NULL;
-    CS_Def_EepromMemory_Table_Entry_t *OuterEntry   = NULL;
+    CS_EepromTableEntry_t *StartOfTable = NULL;
+    CS_EepromTableEntry_t *OuterEntry   = NULL;
     int32                              OuterLoop    = 0;
     uint32                             StateField   = 0;
     cpuaddr                            Address      = 0;
@@ -139,7 +139,7 @@ int32 CS_ValidateMemoryChecksumDefinitionTable(void *TblPtr)
     int32                              BadCount     = 0;
     int32                              EmptyCount   = 0;
 
-    StartOfTable = (CS_Def_EepromMemory_Table_Entry_t *)TblPtr;
+    StartOfTable = (CS_EepromTableEntry_t *)TblPtr;
 
     Result = CFE_SUCCESS;
 
@@ -212,8 +212,8 @@ int32 CS_ValidateMemoryChecksumDefinitionTable(void *TblPtr)
 int32 CS_ValidateTablesChecksumDefinitionTable(void *TblPtr)
 {
     int32                        Result         = CFE_SUCCESS;
-    CS_Def_Tables_Table_Entry_t *StartOfTable   = NULL;
-    CS_Def_Tables_Table_Entry_t *OuterEntry     = NULL;
+    CS_TablesTableEntry_t *StartOfTable   = NULL;
+    CS_TablesTableEntry_t *OuterEntry     = NULL;
     int32                        OuterLoop      = 0;
     int32                        InnerLoop      = 0;
     uint32                       StateField     = 0;
@@ -222,7 +222,7 @@ int32 CS_ValidateTablesChecksumDefinitionTable(void *TblPtr)
     int32                        EmptyCount     = 0;
     bool                         DuplicateFound = false;
 
-    StartOfTable = (CS_Def_Tables_Table_Entry_t *)TblPtr;
+    StartOfTable = (CS_TablesTableEntry_t *)TblPtr;
 
     for (OuterLoop = 0; OuterLoop < CS_MAX_NUM_TABLES_TABLE_ENTRIES; OuterLoop++)
     {
@@ -328,8 +328,8 @@ int32 CS_ValidateTablesChecksumDefinitionTable(void *TblPtr)
 int32 CS_ValidateAppChecksumDefinitionTable(void *TblPtr)
 {
     int32                     Result         = CFE_SUCCESS;
-    CS_Def_App_Table_Entry_t *StartOfTable   = NULL;
-    CS_Def_App_Table_Entry_t *OuterEntry     = NULL;
+    CS_AppTableEntry_t*StartOfTable   = NULL;
+    CS_AppTableEntry_t*OuterEntry     = NULL;
     int32                     OuterLoop      = 0;
     int32                     InnerLoop      = 0;
     uint32                    StateField     = 0;
@@ -338,7 +338,7 @@ int32 CS_ValidateAppChecksumDefinitionTable(void *TblPtr)
     int32                     EmptyCount     = 0;
     bool                      DuplicateFound = false;
 
-    StartOfTable = (CS_Def_App_Table_Entry_t *)TblPtr;
+    StartOfTable = (CS_AppTableEntry_t*)TblPtr;
 
     for (OuterLoop = 0; OuterLoop < CS_MAX_NUM_APP_TABLE_ENTRIES; OuterLoop++)
     {
@@ -440,12 +440,12 @@ int32 CS_ValidateAppChecksumDefinitionTable(void *TblPtr)
 /* CS  processing new definition tables for Eeprom or Memory       */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void CS_ProcessNewEepromMemoryDefinitionTable(const CS_Def_EepromMemory_Table_Entry_t *DefinitionTblPtr,
+void CS_ProcessNewEepromMemoryDefinitionTable(const CS_EepromTableEntry_t *DefinitionTblPtr,
                                               const CS_Res_EepromMemory_Table_Entry_t *ResultsTblPtr, uint16 NumEntries,
                                               uint16 Table)
 {
-    CS_Def_EepromMemory_Table_Entry_t *StartOfDefTable     = NULL;
-    CS_Def_EepromMemory_Table_Entry_t *DefEntry            = NULL;
+    CS_EepromTableEntry_t *StartOfDefTable     = NULL;
+    CS_EepromTableEntry_t *DefEntry            = NULL;
     CS_Res_EepromMemory_Table_Entry_t *StartOfResultsTable = NULL;
     CS_Res_EepromMemory_Table_Entry_t *ResultsEntry        = NULL;
     uint16                             Loop                = 0;
@@ -535,11 +535,11 @@ void CS_ProcessNewEepromMemoryDefinitionTable(const CS_Def_EepromMemory_Table_En
 /* CS processing new definition tables for Tables                  */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void CS_ProcessNewTablesDefinitionTable(const CS_Def_Tables_Table_Entry_t *DefinitionTblPtr,
+void CS_ProcessNewTablesDefinitionTable(const CS_TablesTableEntry_t *DefinitionTblPtr,
                                         const CS_Res_Tables_Table_Entry_t *ResultsTblPtr)
 {
-    CS_Def_Tables_Table_Entry_t *StartOfDefTable     = NULL;
-    CS_Def_Tables_Table_Entry_t *DefEntry            = NULL;
+    CS_TablesTableEntry_t *StartOfDefTable     = NULL;
+    CS_TablesTableEntry_t *DefEntry            = NULL;
     CS_Res_Tables_Table_Entry_t *StartOfResultsTable = NULL;
     CS_Res_Tables_Table_Entry_t *ResultsEntry        = NULL;
     uint16                       Loop                = 0;
@@ -727,11 +727,11 @@ void CS_ProcessNewTablesDefinitionTable(const CS_Def_Tables_Table_Entry_t *Defin
 /* CS processing new definition tables for Apps                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void CS_ProcessNewAppDefinitionTable(const CS_Def_App_Table_Entry_t *DefinitionTblPtr,
+void CS_ProcessNewAppDefinitionTable(const CS_AppTableEntry_t*DefinitionTblPtr,
                                      const CS_Res_App_Table_Entry_t *ResultsTblPtr)
 {
-    CS_Def_App_Table_Entry_t *StartOfDefTable     = NULL;
-    CS_Def_App_Table_Entry_t *DefEntry            = NULL;
+    CS_AppTableEntry_t*StartOfDefTable     = NULL;
+    CS_AppTableEntry_t*DefEntry            = NULL;
     CS_Res_App_Table_Entry_t *StartOfResultsTable = NULL;
     CS_Res_App_Table_Entry_t *ResultsEntry        = NULL;
     uint16                    Loop                = 0;
@@ -863,19 +863,19 @@ int32 CS_TableInit(CFE_TBL_Handle_t *DefinitionTableHandle, CFE_TBL_Handle_t *Re
         {
             if (Table == CS_APP_TABLE)
             {
-                CS_ProcessNewAppDefinitionTable((CS_Def_App_Table_Entry_t *)DefinitionTblPtr,
+                CS_ProcessNewAppDefinitionTable((CS_AppTableEntry_t*)DefinitionTblPtr,
                                                 (CS_Res_App_Table_Entry_t *)ResultsTblPtr);
             }
             else
             {
                 if (Table == CS_TABLES_TABLE)
                 {
-                    CS_ProcessNewTablesDefinitionTable((CS_Def_Tables_Table_Entry_t *)DefinitionTblPtr,
+                    CS_ProcessNewTablesDefinitionTable((CS_TablesTableEntry_t *)DefinitionTblPtr,
                                                        (CS_Res_Tables_Table_Entry_t *)ResultsTblPtr);
                 }
                 else
                 {
-                    CS_ProcessNewEepromMemoryDefinitionTable((CS_Def_EepromMemory_Table_Entry_t *)DefinitionTblPtr,
+                    CS_ProcessNewEepromMemoryDefinitionTable((CS_EepromTableEntry_t *)DefinitionTblPtr,
                                                              (CS_Res_EepromMemory_Table_Entry_t *)ResultsTblPtr,
                                                              NumEntries, Table);
                 }
@@ -993,19 +993,19 @@ int32 CS_HandleTableUpdate(void *DefinitionTblPtr, void *ResultsTblPtr, CFE_TBL_
                 }
             }
 
-            CS_ProcessNewTablesDefinitionTable((CS_Def_Tables_Table_Entry_t *)DefinitionTblPtr,
+            CS_ProcessNewTablesDefinitionTable((CS_TablesTableEntry_t *)DefinitionTblPtr,
                                                (CS_Res_Tables_Table_Entry_t *)ResultsTblPtr);
         }
         else
         {
             if (Table == CS_APP_TABLE)
             {
-                CS_ProcessNewAppDefinitionTable((CS_Def_App_Table_Entry_t *)DefinitionTblPtr,
+                CS_ProcessNewAppDefinitionTable((CS_AppTableEntry_t*)DefinitionTblPtr,
                                                 (CS_Res_App_Table_Entry_t *)ResultsTblPtr);
             }
             else
             {
-                CS_ProcessNewEepromMemoryDefinitionTable((CS_Def_EepromMemory_Table_Entry_t *)DefinitionTblPtr,
+                CS_ProcessNewEepromMemoryDefinitionTable((CS_EepromTableEntry_t *)DefinitionTblPtr,
                                                          (CS_Res_EepromMemory_Table_Entry_t *)ResultsTblPtr, NumEntries,
                                                          Table);
             }

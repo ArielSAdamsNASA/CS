@@ -182,7 +182,7 @@ bool CS_GetTableResTblEntryByName(CS_Res_Tables_Table_Entry_t **EntryPtr, const 
  *  \retval true  Name was found in the table
  *  \retval false Name was not found in the table
  */
-bool CS_GetTableDefTblEntryByName(CS_Def_Tables_Table_Entry_t **EntryPtr, const char *Name);
+bool CS_GetTableDefTblEntryByName(CS_TablesTableEntry_t **EntryPtr, const char *Name);
 
 /**
  * \brief Gets a pointer to the results entry given a app name
@@ -234,7 +234,7 @@ bool CS_GetAppResTblEntryByName(CS_Res_App_Table_Entry_t **EntryPtr, const char 
  *  \retval true  Name was found in the table
  *  \retval false Name was not found in the table
  */
-bool CS_GetAppDefTblEntryByName(CS_Def_App_Table_Entry_t **EntryPtr, const char *Name);
+bool CS_GetAppDefTblEntryByName(CS_AppTableEntry_t **EntryPtr, const char *Name);
 
 /**
  * \brief Find an enabled Eeprom entry

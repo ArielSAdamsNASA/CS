@@ -52,7 +52,7 @@ void CS_NoopCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.CmdCounter++;
 
@@ -72,7 +72,7 @@ void CS_ResetCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.CmdCounter    = 0;
         CS_AppData.HkPacket.CmdErrCounter = 0;
@@ -104,13 +104,13 @@ void CS_BackgroundCheckCycle(const CS_NoArgsCmd_t *CmdPtr)
     CFE_MSG_FcnCode_t CommandCode    = 0;
     size_t            ActualLength   = 0;
 
-    CFE_MSG_GetSize(&CmdPtr->CmdHeader.Msg, &ActualLength);
+    CFE_MSG_GetSize(CFE_MSG_PTR(CmdPtr), &ActualLength);
 
     /* Verify the command packet length */
     if (ExpectedLength != ActualLength)
     {
-        CFE_MSG_GetMsgId(&CmdPtr->CmdHeader.Msg, &MessageID);
-        CFE_MSG_GetFcnCode(&CmdPtr->CmdHeader.Msg, &CommandCode);
+        CFE_MSG_GetMsgId(CFE_MSG_PTR(CmdPtr), &MessageID);
+        CFE_MSG_GetFcnCode(CFE_MSG_PTR(CmdPtr), &CommandCode);
 
         CFE_EVS_SendEvent(CS_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid msg length: ID = 0x%08lX, CC = %d, Len = %lu, Expected = %lu",
@@ -208,7 +208,7 @@ void CS_DisableAllCSCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.ChecksumState = CS_STATE_DISABLED;
 
@@ -239,7 +239,7 @@ void CS_EnableAllCSCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.ChecksumState = CS_STATE_ENABLED;
 
@@ -260,7 +260,7 @@ void CS_DisableCfeCoreCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.CfeCoreCSState = CS_STATE_DISABLED;
         CS_ZeroCfeCoreTempValues();
@@ -287,7 +287,7 @@ void CS_EnableCfeCoreCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.CfeCoreCSState = CS_STATE_ENABLED;
 
@@ -313,7 +313,7 @@ void CS_DisableOSCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.OSCSState = CS_STATE_DISABLED;
         CS_ZeroOSTempValues();
@@ -340,7 +340,7 @@ void CS_EnableOSCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         CS_AppData.HkPacket.OSCSState = CS_STATE_ENABLED;
 
@@ -366,7 +366,7 @@ void CS_ReportBaselineCfeCoreCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_AppData.CfeCoreCodeSeg.ComputedYet == true)
         {
@@ -394,7 +394,7 @@ void CS_ReportBaselineOSCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_AppData.OSCodeSeg.ComputedYet == true)
         {
@@ -424,7 +424,7 @@ void CS_RecomputeBaselineCfeCoreCmd(const CS_NoArgsCmd_t *CmdPtr)
     int32           Status;
 
     /* Verify command packet length... */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_AppData.HkPacket.RecomputeInProgress == false && CS_AppData.HkPacket.OneShotInProgress == false)
         {
@@ -478,7 +478,7 @@ void CS_RecomputeBaselineOSCmd(const CS_NoArgsCmd_t *CmdPtr)
     int32           Status;
 
     /* Verify command packet length... */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_AppData.HkPacket.RecomputeInProgress == false && CS_AppData.HkPacket.OneShotInProgress == false)
         {
@@ -530,7 +530,7 @@ void CS_OneShotCmd(const CS_OneShotCmd_t *CmdPtr)
     int32           Status;
 
     /* Verify command packet length... */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         /* validate size and address */
         Status = CFE_PSP_MemValidateRange(CmdPtr->Address, CmdPtr->Size, CFE_PSP_MEM_ANY);
@@ -610,7 +610,7 @@ void CS_CancelOneShotCmd(const CS_NoArgsCmd_t *CmdPtr)
     int32  Status;
 
     /* Verify command packet length... */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         /* Make sure there is a OneShot command in use */
         if (CS_AppData.HkPacket.RecomputeInProgress == false && CS_AppData.HkPacket.OneShotInProgress == true)

@@ -98,7 +98,7 @@
  *       The value must be greater than zero
  */
 #define CS_PIPE_DEPTH (3 * CFE_PLATFORM_SB_DEFAULT_MSG_LIMIT)
-
+#ifndef CFE_EDS_ENABLED_BUILD
 /**
  * \brief  Maximum number of entries in the Eeprom table to checksum
  *
@@ -110,7 +110,7 @@
  *     This parameter is limited by the  uint16 datatype that defines it.
  *     This parameter is limited to 65535.
  */
-#define CS_MAX_NUM_EEPROM_TABLE_ENTRIES 16
+typedef CS_EepromTableEntry_t CS_Def_EepromMemory_Table_Entry_t
 
 /**
  * \brief  Maximum number of entries in the Memory table to checksum
@@ -123,7 +123,7 @@
  *     This parameter is limited by the  uint16 datatype that defines it.
  *     This parameter is limited to 65535.
  */
-#define CS_MAX_NUM_MEMORY_TABLE_ENTRIES 16
+
 
 /**
  * \brief Maximum number of tables to checksum
@@ -135,7 +135,7 @@
  *       This parameter is limited by the maximum number of tables allowed
  *       in the system. This parameter is limited to #CFE_PLATFORM_TBL_MAX_NUM_TABLES
  */
-#define CS_MAX_NUM_TABLES_TABLE_ENTRIES 24
+typedef CS_TablesTableEntry_t CS_Def_Tables_Table_Entry_t
 
 /**
  * \brief Maximum number of applications to checksum
@@ -147,8 +147,8 @@
  *       This parameter is limited by the maximum number of applications allowed
  *       in the system. This parameter is limited to #CFE_PLATFORM_ES_MAX_APPLICATIONS
  */
-#define CS_MAX_NUM_APP_TABLE_ENTRIES 24
-
+typedef CS_AppTableEntry_t CS_Def_App_Table_Entry_t 
+#endif
 /**
  * \brief Default number of bytes to checksum per cycle
  *
