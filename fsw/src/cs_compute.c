@@ -449,7 +449,7 @@ void CS_RecomputeEepromMemoryChildTask(void)
     uint16                             PreviousDefState     = CS_STATE_EMPTY;
     bool                               DefEntryFound        = false;
     uint16                             DefEntryID           = 0;
-    CS_Def_EepromMemory_Table_Entry_t *DefTblPtr            = NULL;
+    CS_EepromTableEntry_t *DefTblPtr            = NULL;
     uint16                             MaxDefEntries        = 0;
     CFE_TBL_Handle_t                   DefTblHandle         = CFE_TBL_BAD_TABLE_HANDLE;
     CS_Res_Tables_Table_Entry_t *      TablesTblResultEntry = NULL;
@@ -577,7 +577,7 @@ void CS_RecomputeAppChildTask(void)
     uint16                    PreviousDefState = CS_STATE_EMPTY;
     bool                      DefEntryFound    = false;
     uint16                    DefEntryID       = 0;
-    CS_Def_App_Table_Entry_t *DefTblPtr        = NULL;
+    CS_AppTableEntry_t        *DefTblPtr       = NULL;
     uint16                    MaxDefEntries    = 0;
     CFE_TBL_Handle_t          DefTblHandle     = CFE_TBL_BAD_TABLE_HANDLE;
 
@@ -683,7 +683,7 @@ void CS_RecomputeTablesChildTask(void)
     uint16                       PreviousDefState = CS_STATE_EMPTY;
     bool                         DefEntryFound    = false;
     uint16                       DefEntryID       = 0;
-    CS_Def_Tables_Table_Entry_t *DefTblPtr        = NULL;
+    CS_TablesTableEntry_t *DefTblPtr        = NULL;
     uint16                       MaxDefEntries    = 0;
     CFE_TBL_Handle_t             DefTblHandle     = CFE_TBL_BAD_TABLE_HANDLE;
 

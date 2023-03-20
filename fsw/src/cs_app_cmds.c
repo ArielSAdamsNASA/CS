@@ -50,7 +50,7 @@ void CS_DisableAppCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -78,7 +78,7 @@ void CS_EnableAppCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -109,7 +109,7 @@ void CS_ReportBaselineAppCmd(const CS_AppNameCmd_t *CmdPtr)
     char                      Name[OS_MAX_API_NAME];
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         strncpy(Name, CmdPtr->Name, sizeof(Name) - 1);
         Name[sizeof(Name) - 1] = '\0';
@@ -155,7 +155,7 @@ void CS_RecomputeBaselineAppCmd(const CS_AppNameCmd_t *CmdPtr)
 
     /* Verify command packet length */
 
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_AppData.HkPacket.RecomputeInProgress == false && CS_AppData.HkPacket.OneShotInProgress == false)
         {
@@ -218,11 +218,11 @@ void CS_DisableNameAppCmd(const CS_AppNameCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_AppNameCmd_t);
 
     CS_Res_App_Table_Entry_t *ResultsEntry;
-    CS_Def_App_Table_Entry_t *DefinitionEntry;
+    CS_AppTableEntry_t *DefinitionEntry;
     char                      Name[OS_MAX_API_NAME];
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -274,11 +274,11 @@ void CS_EnableNameAppCmd(const CS_AppNameCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_AppNameCmd_t);
 
     CS_Res_App_Table_Entry_t *ResultsEntry;
-    CS_Def_App_Table_Entry_t *DefinitionEntry;
+    CS_AppTableEntry_t *DefinitionEntry;
     char                      Name[OS_MAX_API_NAME];
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {

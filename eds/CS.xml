@@ -1,0 +1,1830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    GSC-18128-1, "Core Flight Executive Version 6.7"
+    LEW-19710-1, "CCSDS electronic data sheet implementation"
+
+    Copyright (c) 2006-2019 United States Government as represented by
+    the Administrator of the National Aeronautics and Space Administration.
+    All Rights Reserved.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    This document adheres to the Electronic Data Sheet (EDS) XML schema
+    as prescribed in CCSDS book 876.0.
+
+    Purpose:
+      This describes all interface objects for the Executive Services (CFE_ES)
+      core application
+
+-->
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+  <Package name="CS" shortDescription="Checksum">
+
+    <DataTypeSet>
+
+      <ContainerDataType name="OneShot_Payload" shortDescription="Command type for sending one shot calculation">
+        <EntryList>
+          <Entry name="Address" type="CFE_ES/MemAddress" shortDescription="Address to start checksum" />
+          <Entry name="Size" type="BASE_TYPES/uint32" shortDescription="Number of bytes to checksum" />
+          <Entry name="MaxBytesPerCycle" type="BASE_TYPES/uint32" shortDescription="Max Number of bytes to compute per cycle. Value of Zero to use platform config value" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="Entry_Payload" shortDescription="Command type for commands using Memory or Eeprom tables">
+        <EntryList>
+          <Entry name="EntryID" type="BASE_TYPES/uint32" shortDescription="EntryID to perform a command on" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="GetEntryID_Payload" shortDescription="Get entry ID command">
+        <EntryList>
+          <Entry name="Address" type="CFE_ES/MemAddress" shortDescription="Address to get the ID for" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="TableName_Payload" shortDescription="Command type for commanding by table name">
+        <EntryList>
+          <Entry name="Name" type="BASE_TYPES/PathName" shortDescription="Table name to perform a command on" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="AppName_Payload" shortDescription="Command type for commanding by app name">
+        <EntryList>
+          <Entry name="Name" type="BASE_TYPES/ApiName" shortDescription="App name to perform a command on" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EepromTableEntry" shortDescription="#CS_Def_EepromMemory_Table_Entry">
+        <EntryList>
+          <Entry name="StartAddress" type="CFE_ES/MemAddress" shortDescription="The Start address to Checksum" />
+          <Entry name="State" type="BASE_TYPES/uint16" shortDescription="Uses the CS_STATE_... defines from above" />
+          <Entry name="Filler16" type="BASE_TYPES/uint16" shortDescription="Padding" />
+          <Entry name="NumBytesToChecksum" type="BASE_TYPES/uint32" shortDescription="The number of Bytes to Checksum" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="EepromTable" dataTypeRef="EepromTableEntry">
+          <DimensionList>
+            <Dimension size="${CS/MAX_NUM_EEPROM_TABLE_ENTRIES}" />
+          </DimensionList>
+      </ArrayDataType>
+
+      <ArrayDataType name="MemoryTable" dataTypeRef="EepromTableEntry">
+          <DimensionList>
+            <Dimension size="${CS/MAX_NUM_MEMORY_TABLE_ENTRIES}" />
+          </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="TablesTableEntry" shortDescription="#CS_Def_Tables_Table_Entry_t">
+        <EntryList>
+          <Entry name="State" type="BASE_TYPES/uint16" shortDescription="Uses the CS_STATE_... defines from above" />
+          <Entry name="Name" type="BASE_TYPES/PathName" shortDescription="Name of the table" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="TablesTable" dataTypeRef="TablesTableEntry">
+          <DimensionList>
+            <Dimension size="${CS/MAX_NUM_TABLES_TABLE_ENTRIES}" />
+          </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="AppTableEntry" shortDescription="#CS_Def_App_Table_Entry_t">
+        <EntryList>
+          <Entry name="State" type="BASE_TYPES/uint16" shortDescription="Uses the CS_STATE_... defines from above" />
+          <Entry name="Name" type="BASE_TYPES/ApiName" shortDescription="Name of the app" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="AppTable" dataTypeRef="AppTableEntry">
+          <DimensionList>
+            <Dimension size="${CS/MAX_NUM_APP_TABLE_ENTRIES}" />
+          </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="CMD" baseType="CFE_HDR/CommandHeader">
+      </ContainerDataType>
+
+      <ContainerDataType name="HousekeepingCmd" baseType="CFE_HDR/CommandHeader" shortDescription="Send Housekeeping command" />
+
+      <ContainerDataType name="HkTlm_Payload" shortDescription="Housekeeping Packet Structure">
+        <EntryList>
+          <Entry name="CmdCounter" type="BASE_TYPES/uint8" shortDescription="CS Application Command Counter" />
+          <Entry name="CmdErrCounter" type="BASE_TYPES/uint8" shortDescription="CS Application Command Error Counter" />
+          <Entry name="ChecksumState" type="BASE_TYPES/uint8" shortDescription="CS Application global checksum state" />
+          <Entry name="EepromCSState" type="BASE_TYPES/uint8" shortDescription="CS Eeprom table checksum state" />
+          <Entry name="MemoryCSState" type="BASE_TYPES/uint8" shortDescription="CS Memory table checksum state" />
+          <Entry name="AppCSState" type="BASE_TYPES/uint8" shortDescription="CS App table checksum state" />
+          <Entry name="TablesCSState" type="BASE_TYPES/uint8" shortDescription="CS Tables table checksum state" />
+          <Entry name="OSCSState" type="BASE_TYPES/uint8" shortDescription="OS code segment checksum state" />
+          <Entry name="CfeCoreCSState" type="BASE_TYPES/uint8" shortDescription="cFE Core code segment checksum state" />
+          <Entry name="RecomputeInProgress" type="BASE_TYPES/uint8" shortDescription="CS 'Recompute In Progress' flag" />
+          <Entry name="OneShotInProgress" type="BASE_TYPES/uint8" shortDescription="CS 'OneShot In Progress' flag" />
+          <Entry name="Filler8" type="BASE_TYPES/uint8" shortDescription="8 bit padding" />
+          <Entry name="EepromCSErrCounter" type="BASE_TYPES/uint16" shortDescription="Eeprom miscompare counter" />
+          <Entry name="MemoryCSErrCounter" type="BASE_TYPES/uint16" shortDescription="Memory miscompare counter" />
+          <Entry name="AppCSErrCounter" type="BASE_TYPES/uint16" shortDescription="App miscompare counter" />
+          <Entry name="TablesCSErrCounter" type="BASE_TYPES/uint16" shortDescription="Tables miscompare counter" />
+          <Entry name="CfeCoreCSErrCounter" type="BASE_TYPES/uint16" shortDescription="cFE core miscompare counter" />
+          <Entry name="OSCSErrCounter" type="BASE_TYPES/uint16" shortDescription="OS code segment miscopmare counter" />
+          <Entry name="CurrentCSTable" type="BASE_TYPES/uint16" shortDescription="Current table being checksummed" />
+          <Entry name="CurrentEntryInTable" type="BASE_TYPES/uint16" shortDescription="Current entry ID in table being checksummed" />
+          <Entry name="EepromBaseline" type="BASE_TYPES/uint32" shortDescription="Baseline checksum for all of Eeprom" />
+          <Entry name="OSBaseline" type="BASE_TYPES/uint32" shortDescription="Baseline checksum for the OS code segment" />
+          <Entry name="CfeCoreBaseline" type="BASE_TYPES/uint32" shortDescription="Basline checksum for the cFE core" />
+          <Entry name="LastOneShotAddress" type="CFE_ES/MemAddress" shortDescription="Address used in last one shot checksum command" />
+          <Entry name="LastOneShotSize" type="BASE_TYPES/uint32" shortDescription="Size used in the last one shot checksum command" />
+          <Entry name="LastOneShotMaxBytesPerCycle" type="BASE_TYPES/uint32" shortDescription="Max bytes per cycle for last one shot checksum command" />
+          <Entry name="LastOneShotChecksum" type="BASE_TYPES/uint32" shortDescription="Checksum of the last one shot checksum command" />
+          <Entry name="PassCounter" type="BASE_TYPES/uint32" shortDescription="Number of times CS has passed through all of its tables" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="HousekeepingPkt" baseType="CFE_HDR/TelemetryHeader">
+        <EntryList>
+          <Entry type="HkTlm_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="NoopCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Noop
+
+         \par Description
+              Implements the Noop command that insures the CS task is alive
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_NOOP_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_RESET_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="0" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ResetCtrsCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Reset Counters
+
+         \par Description
+              Resets the CS housekeeping counters
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will be cleared
+              - #CS_HkPacket_t.CmdErrCounter will be cleared
+              - The #CS_RESET_DBG_EID informational event message will be
+                generated when the command is executed
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_NOOP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="1" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="StartOneShotCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Start One shot calculation
+
+         \par Description
+                Computes a checksum on the command specified address
+                and size of memory at the command specified rate.
+                This command spawns a child task to complete the
+                checksum.
+
+         \par Command Structure
+              #CS_OneShotCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ONESHOT_STARTED_DBG_EID debug event message will be
+                generated when the command is received
+              - The CS_ONESHOT_FINISHED_INF_EID informational message will
+                be generated when the compuation finishes.
+              - #CS_HkPacket_t.LastOneShotChecksum will be updated to the new value
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The address and size cannot be validated
+              - A child task (recompute baseline or one shot ) is
+                already running, precluding starting another. Only one child
+                task is allowed to run at any given time.
+              - The child task failed to be created
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_ONESHOT_MEMVALIDATE_ERR_EID
+              - Error specific event message #CS_ONESHOT_CHDTASK_ERR_EID
+              - Error specific event message #CS_ONESHOT_CREATE_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_CANCEL_ONESHOT_CC,
+             #CS_RECOMPUTE_BASELINE_CFECORE_CC,
+             #CS_RECOMPUTE_BASELINE_OS_CC,
+             #CS_RECOMPUTE_BASELINE_EEPROM_CC,
+             #CS_RECOMPUTE_BASELINE_MEMORY_CC,
+             #CS_RECOMPUTE_BASELINE_TABLE_CC,
+             #CS_RECOMPUTE_BASELINE_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="2" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="OneShot_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="CancelOneShotCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Cancel one shot
+
+         \par Description
+              Cancels a one shot calculation that is already in progress.
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ONESHOT_CANCELLED_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - A one shot calculation is not in progress
+              - The child task could not be deleted
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_ONESHOT_CANCEL_NO_CHDTASK_ERR_EID
+              - Error specific event message #CS_ONESHOT_CANCEL_DELETE_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ONESHOT_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="3" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableAllCSCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable Global Checksumming
+
+         \par Description
+              Allows CS to continue background checking
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_ALL_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.ChecksumState set to #CS_STATE_ENABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_ALL_CS_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="4" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableAllCSCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd  Disable Global Checksumming
+
+         \par Description
+              Disables all background checking
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_ALL_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.ChecksumState set to #CS_STATE_DISABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_ALL_CS_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="5" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableCfeCoreCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd  Enable checksumming of cFE core
+
+         \par Description
+              Enables background checking on the cFE core code segment
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_CFECORE_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.CfeCoreCSState set to #CS_STATE_ENABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_CFECORE_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="6" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisablCfeCoreCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd  Disable checksumming of cFE core
+
+         \par Description
+              Disables background checking on the cFE core code segment
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_CFECORE_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.CfeCoreCSState set to #CS_STATE_DISABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_CFECORE_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="7" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ReportBaselineCfeCoreCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd  Report Baseline checksum of cFE core
+
+         \par Description
+              Reports the baseline checksum of the cFE core
+              that has already been calculated.
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_BASELINE_CFECORE_INF_EID informational event message will be
+                generated when the command is received, or
+              - The #CS_NO_BASELINE_CFECORE_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="8" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="RecomputeBaselineCfeCoreCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd  Recompute Baseline checksum of cFE core
+
+         \par Description
+              Recomputesthe baseline checksum of the cFE core
+              and use the new value as the baseline.
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_RECOMPUTE_CFECORE_STARTED_DBG_EID debug event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - A child task (recompute baseline or one shot ) is
+                already running, precluding starting another. Only one child
+                task is allowed to run at any given time.
+              - The child task failed to be created by Executive Services (ES)
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_CFECORE_CREATE_CHDTASK_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_CFECORE_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ONESHOT_CC,
+             #CS_RECOMPUTE_BASELINE_OS_CC,
+             #CS_RECOMPUTE_BASELINE_EEPROM_CC,
+             #CS_RECOMPUTE_BASELINE_MEMORY_CC,
+             #CS_RECOMPUTE_BASELINE_TABLE_CC,
+             #CS_RECOMPUTE_BASELINE_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="9" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableOSCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming of OS code segment
+
+         \par Description
+              Enables background checking on the OS code segment
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_OS_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - #CS_HkPacket_t.OSCSState set to #CS_STATE_ENABLED
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_OS_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="10" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableOSCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming of OS code segment
+
+         \par Description
+              Disables background checking on the OS code segment code segment
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_OS_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.OSCSState set to #CS_STATE_DISABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_OS_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="11" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ReportBaselineOSCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Report Baseline checksum of OS code segment
+
+         \par Description
+              Reports the baseline checksum of the OS code segment
+              that has already been calculated.
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_BASELINE_OS_INF_EID informational event message will be
+                generated when the command is received, or
+              - The #CS_NO_BASELINE_OS_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="12" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="RecomputeBaselineOSCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Recompute Baseline checksum of OS code segment
+
+         \par Description
+              Recomputesthe baseline checksum of the OS code segment
+              and use the new value as the baseline.
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_RECOMPUTE_OS_STARTED_DBG_EID debug event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - A child task (recompute baseline or one shot ) is
+                already running, precluding starting another. Only one child
+                task is allowed to run at any given time.
+              - The child task failed to be created by Executive Services (ES)
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_OS_CREATE_CHDTASK_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_OS_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ONESHOT_CC,
+             #CS_RECOMPUTE_BASELINE_CFECORE_CC,
+             #CS_RECOMPUTE_BASELINE_EEPROM_CC,
+             #CS_RECOMPUTE_BASELINE_MEMORY_CC,
+             #CS_RECOMPUTE_BASELINE_TABLE_CC,
+             #CS_RECOMPUTE_BASELINE_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="13" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableEepromCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for Eeprom table
+
+         \par Description
+              Allow the Eeprom table to checksummed in the background
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_EEPROM_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.EepromCSState set to #CS_STATE_ENABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_EEPROM_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="14" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableEepromCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for Eeprom table
+
+         \par Description
+              Disable the Eeprom table background checksumming
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_EEPROM_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.EepromCSState set to #CS_STATE_DISABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_EEPROM_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="15" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ReportBaselineEepromCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Report Baseline checksum of Eeprom Entry
+
+         \par Description
+              Reports the baseline checksum of the Eeprom
+              table entry that has already been calculated.
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_BASELINE_EEPROM_INF_EID informational event message will be
+                generated when the command is received, or
+              - The #CS_NO_BASELINE_EEPROM_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified Entry ID is invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_BASELINE_INVALID_ENTRY_EEPROM_ERR_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="16" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="RecomputeBaselineEepromCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Recompute Baseline checksum of Eeprom Entry
+
+         \par Description
+              Recompute the baseline checksum of the Eeprom
+              table entry and use that value as the new baseline.
+              This command spawns a child task to do the recompute.
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_RECOMPUTE_EEPROM_STARTED_DBG_EID debug event
+                message will be generated when the command is received
+              - The #CS_RECOMPUTE_FINISH_EEPROM_MEMORY_INF_EID informational event
+                message will be generated when the recompute is finished
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified Entry ID is invalid
+              - A child task (recompute baseline or one shot ) is
+                already running, precluding starting another. Only one child
+                task is allowed to run at any given time.
+              - The child task failed to be created by Executive Services (ES)
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_INVALID_ENTRY_EEPROM_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_EEPROM_CREATE_CHDTASK_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_EEPROM_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ONESHOT_CC,
+             #CS_RECOMPUTE_BASELINE_CFECORE_CC,
+             #CS_RECOMPUTE_BASELINE_OS_CC,
+             #CS_RECOMPUTE_BASELINE_MEMORY_CC,
+             #CS_RECOMPUTE_BASELINE_TABLE_CC,
+             #CS_RECOMPUTE_BASELINE_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="17" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableEntryEepromCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for an Eeprom entry
+
+         \par Description
+              Allow the Eeprom entry to checksummed in the background
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_EEPROM_ENTRY_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified entry was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_ENABLE_EEPROM_INVALID_ENTRY_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_ENTRY_EEPROM_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="18" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableEntryEepromCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for an Eeprom entry
+
+         \par Description
+             Disable the Eeprom entry background checksumming
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_EEPROM_ENTRY_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified entry was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_DISABLE_EEPROM_INVALID_ENTRY_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_ENTRY_EEPROM_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="19" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="GetEntryIDEepromCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Get the Entry ID for a given Eeprom address
+
+         \par Description
+            Gets the Entry ID of an Eeprom address to use in
+            subsequent commands.
+
+         \par Command Structure
+              #CS_GetEntryIDCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_GET_ENTRY_ID_EEPROM_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified address was not found in the table
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_GET_ENTRY_ID_EEPROM_NOT_FOUND_INF_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="20" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="GetEntryID_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableMemoryCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for Memory table
+
+         \par Description
+              Allow the Memory table to checksummed in the background
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_MEMORY_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.MemoryCSState set to #CS_STATE_ENABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_MEMORY_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="21" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableMemoryCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for Memory table
+
+         \par Description
+              Disable the Memory table background checksumming
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_MEMORY_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.MemoryCSState set to #CS_STATE_DISABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_MEMORY_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="22" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ReportBaselineMemoryCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Report Baseline checksum of Memory Entry
+
+         \par Description
+              Reports the baseline checksum of the Memory
+              table entry that has already been calculated.
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_BASELINE_MEMORY_INF_EID informational event message will be
+                generated when the command is received, or
+              - The #CS_NO_BASELINE_MEMORY_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified Entry ID is invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_BASELINE_INVALID_ENTRY_MEMORY_ERR_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="23" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="RecomputeBaselineMemoryCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Recompute Baseline checksum of Memory Entry
+
+         \par Description
+              Recompute the baseline checksum of the Memory
+              table entry and use that value as the new baseline.
+              This command spawns a child task to do the recompute.
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_RECOMPUTE_MEMORY_STARTED_DBG_EID debug event
+                message will be generated when the command is received
+              - The #CS_RECOMPUTE_FINISH_EEPROM_MEMORY_INF_EID informational event
+                message will be generated when the recompute is finished
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified Entry ID is invalid
+              - A child task (recompute baseline or one shot ) is
+                already running, precluding starting another. Only one child
+                task is allowed to run at any given time.
+              - The child task failed to be created by Executive Services (ES)
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_INVALID_ENTRY_MEMORY_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_MEMORY_CREATE_CHDTASK_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_MEMORY_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ONESHOT_CC,
+             #CS_RECOMPUTE_BASELINE_CFECORE_CC,
+             #CS_RECOMPUTE_BASELINE_OS_CC,
+             #CS_RECOMPUTE_BASELINE_EEPROM_CC,
+             #CS_RECOMPUTE_BASELINE_TABLE_CC,
+             #CS_RECOMPUTE_BASELINE_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="24" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableEntryMemoryCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for a Memory entry
+
+         \par Description
+              Allow the Memory entry to checksummed in the background
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_MEMORY_ENTRY_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified entry was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_ENABLE_MEMORY_INVALID_ENTRY_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_ENTRY_MEMORY_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="25" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableEntryMemoryCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for a Memory entry
+
+         \par Description
+             Disable the Memory entry background checksumming
+
+         \par Command Structure
+              #CS_EntryCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_MEMORY_ENTRY_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified entry was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_DISABLE_MEMORY_INVALID_ENTRY_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_ENTRY_MEMORY_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="26" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="Entry_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="GetEntryIDMemoryCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Get the Entry ID for a given Memory address
+
+         \par Description
+            Gets the Entry ID of a Memory address to use in
+            subsequent commands.
+
+         \par Command Structure
+              #CS_GetEntryIDCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_GET_ENTRY_ID_MEMORY_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified address was not found in the table
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_GET_ENTRY_ID_MEMORY_NOT_FOUND_INF_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="27" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="GetEntryID_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableTablesCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for Tables table
+
+         \par Description
+              Allow the Tables table to checksummed in the background
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_TABLES_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.TablesCSState set to #CS_STATE_ENABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_TABLES_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="28" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableTablesCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for Tables table
+
+         \par Description
+              Disable the Tables table background checksumming
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_TABLES_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.TablesCSState set to #CS_STATE_DISABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_TABLES_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="29" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ReportBaselineTablesCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Report Baseline checksum of a table
+
+         \par Description
+              Reports the baseline checksum of the
+              table that has already been calculated.
+
+         \par Command Structure
+              #CS_TableNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_BASELINE_TABLES_INF_EID informational event message will be
+                generated when the command is received, or
+              - The #CS_NO_BASELINE_TABLES_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified able name is invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_BASELINE_INVALID_NAME_TABLES_ERR_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="30" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="TableName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="RecomputeBaselineTablesCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Recompute Baseline checksum of a table
+
+         \par Description
+              Recompute the baseline checksum of the
+              table and use that value as the new baseline.
+              This command spawns a child task to do the recompute.
+
+         \par Command Structure
+              #CS_TableNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_RECOMPUTE_TABLES_STARTED_DBG_EID debug event
+                message will be generated when the command is received
+              - The #CS_RECOMPUTE_FINISH_TABLES_INF_EID informational event
+                message will be generated when the recompute is finished.
+                However, for the CS Table Definitions Table only, the checksum
+                value will be incorrect. This is because all entries in this
+                table are disabled while being recomputed and disabling the
+                entry for itself modifies the contents of the table being
+                recomputed. Thus, recomputing the CS Tables Definition Table
+                checksum is not recommended.
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified table name is invalid
+              - A child task (recompute baseline or one shot ) is
+                already running, precluding starting another. Only one child
+                task is allowed to run at any given time.
+              - The child task failed to be created by Executive Services (ES)
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_UNKNOWN_NAME_TABLES_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_TABLES_CREATE_CHDTASK_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_TABLES_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ONESHOT_CC,
+             #CS_RECOMPUTE_BASELINE_CFECORE_CC,
+             #CS_RECOMPUTE_BASELINE_OS_CC,
+             #CS_RECOMPUTE_BASELINE_EEPROM_CC,
+             #CS_RECOMPUTE_BASELINE_MEMORY_CC,
+             #CS_RECOMPUTE_BASELINE_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="31" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="TableName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableNameTableCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for a table
+
+         \par Description
+              Allow the table to checksummed in the background
+
+         \par Command Structure
+              #CS_TableNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_TABLES_NAME_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified table name was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_ENABLE_TABLES_UNKNOWN_NAME_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_NAME_TABLE_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="32" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="TableName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableNameTableCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for a table
+
+         \par Description
+              Disable background checking of the table
+
+         \par Command Structure
+              #CS_TableNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_TABLES_NAME_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified table name was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_DISABLE_TABLES_NAME_INF_EID
+              - Error specific event message #CS_DISABLE_TABLES_UNKNOWN_NAME_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_NAME_TABLE_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="33" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="TableName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableAppsCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for App table
+
+         \par Description
+              Allow the App table to checksummed in the background
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_APP_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.AppCSState set to #CS_STATE_ENABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_APPS_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="34" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableAppsCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for App table
+
+         \par Description
+              Disable the App table background checksumming
+
+         \par Command Structure
+              #CS_NoArgsCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_APP_INF_EID informational event message will be
+                generated when the command is received
+              - #CS_HkPacket_t.AppCSState set to #CS_STATE_DISABLED
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ENABLE_APPS_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="35" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ReportBaselineAppCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Report Baseline checksum of a app
+
+         \par Description
+              Reports the baseline checksum of the
+              app that has already been calculated.
+
+         \par Command Structure
+              #CS_AppNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_BASELINE_APP_INF_EID informational event message will be
+                generated when the command is received, or
+              - The #CS_NO_BASELINE_APP_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified able name is invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_BASELINE_INVALID_NAME_APP_ERR_EID
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="36" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="AppName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="RecomputeBaselineAppCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Recompute Baseline checksum of a app
+
+         \par Description
+              Recompute the baseline checksum of the
+              app and use that value as the new baseline.
+              This command spawns a child task to do the recompute.
+
+         \par Command Structure
+              #CS_AppNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_RECOMPUTE_APP_STARTED_DBG_EID debug event
+                message will be generated when the command is received
+              - The #CS_RECOMPUTE_FINISH_APP_INF_EID informational event
+                message will be generated when the recompute is finished
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - The command specified app name is invalid
+              - A child task (recompute baseline or one shot ) is
+                already running, precluding starting another. Only one child
+                task is allowed to run at any given time.
+              - The child task failed to be created by Executive Services (ES)
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_UNKNOWN_NAME_APP_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_APP_CREATE_CHDTASK_ERR_EID
+              - Error specific event message #CS_RECOMPUTE_APP_CHDTASK_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_ONESHOT_CC,
+             #CS_RECOMPUTE_BASELINE_CFECORE_CC,
+             #CS_RECOMPUTE_BASELINE_OS_CC,
+             #CS_RECOMPUTE_BASELINE_EEPROM_CC,
+             #CS_RECOMPUTE_BASELINE_MEMORY_CC,
+             #CS_RECOMPUTE_BASELINE_TABLE_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="37" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="AppName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="EnableNameAppCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Enable checksumming for a app
+
+         \par Description
+              Allow the app to checksummed in the background
+
+         \par Command Structure
+              #CS_AppNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_ENABLE_APP_NAME_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified app name was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_LEN_ERR_EID
+              - Error specific event message #CS_ENABLE_APP_UNKNOWN_NAME_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_NAME_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="38" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="AppName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DisableNameAppCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Disable checksumming for a app
+
+         \par Description
+              Disable background checking of the app
+
+         \par Command Structure
+              #CS_AppNameCmd_t
+
+         \par Command Verification
+              Successful execution of this command may be verified with
+              the following telemetry:
+              - #CS_HkPacket_t.CmdCounter will increment
+              - The #CS_DISABLE_APP_NAME_INF_EID informational event message will be
+                generated when the command is received
+
+         \par Error Conditions
+              This command may fail for the following reason(s):
+              - Command packet length not as expected
+              - Command specified app name was invalid
+
+         \par Evidence of failure may be found in the following telemetry:
+              - #CS_HkPacket_t.CmdErrCounter will increment
+              - Error specific event message #CS_DISABLE_APP_NAME_INF_EID
+              - Error specific event message #CS_DISABLE_APP_UNKNOWN_NAME_ERR_EID
+
+         \par Criticality
+              None
+
+         \sa #CS_DISABLE_NAME_APP_CC
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="39" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="AppName_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+    </DataTypeSet>
+
+    <ComponentSet>
+      <Component name="Application">
+        <RequiredInterfaceSet>
+          <Interface name="CMD" shortDescription="Command Message ID" type="CFE_SB/Telecommand">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="CMD" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="SEND_HK" shortDescription="CS Housekeeping Request Message ID" type="CFE_SB/Telecommand">
+            <!-- This uses a bare spacepacket with no payload -->
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="HousekeepingCmd" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="BACKGROUND_CYCLE" shortDescription="CS Background Cycle Message ID" type="CFE_SB/Telecommand">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="CFE_HDR/CommandHeader" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="HK_TLM" shortDescription="CS Housekeeping Telemetry Message ID " type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="HousekeepingPkt" />
+            </GenericTypeMapSet>
+          </Interface>
+        </RequiredInterfaceSet>
+        <Implementation>
+          <VariableSet>
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="CmdTopicId" initialValue="${CFE_MISSION/CS_CMD_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="SendHkTopicId" initialValue="${CFE_MISSION/CS_SEND_HK_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="BackgroundCycleTopicId" initialValue="${CFE_MISSION/CS_BACKGROUND_CYCLE_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="HkTlmTopicId" initialValue="${CFE_MISSION/CS_HK_TLM_TOPICID}" />
+          </VariableSet>
+          <!-- Assign fixed numbers to the "TopicId" parameter of each interface -->
+          <ParameterMapSet>
+            <ParameterMap interface="CMD" parameter="TopicId" variableRef="CmdTopicId" />
+            <ParameterMap interface="SEND_HK" parameter="TopicId" variableRef="SendHkTopicId" />
+            <ParameterMap interface="BACKGROUND_CYCLE" parameter="TopicId" variableRef="BackgroundCycleTopicId" />
+            <ParameterMap interface="HK_TLM" parameter="TopicId" variableRef="HkTlmTopicId" />
+          </ParameterMapSet>
+        </Implementation>
+      </Component>
+    </ComponentSet>
+  </Package>
+</PackageFile>

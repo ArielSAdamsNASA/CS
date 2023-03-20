@@ -31,7 +31,7 @@
 #include "cs_platform_cfg.h"
 #include "cs_tbldefs.h"
 
-CS_Def_Tables_Table_Entry_t CS_TablesTable[CS_MAX_NUM_TABLES_TABLE_ENTRIES] = {
+CS_TablesTable_Array_t CS_TablesTable = {
     /*         State             Name   */
 
     /*   0 */ {.State = CS_STATE_EMPTY, .Name = ""},

@@ -31,7 +31,7 @@
 #include "cs_platform_cfg.h"
 #include "cs_tbldefs.h"
 
-CS_Def_App_Table_Entry_t CS_AppTable[CS_MAX_NUM_APP_TABLE_ENTRIES] = {
+CS_AppTable_Array_t CS_AppTable = {
     /*            State             Name   */
     /*   0 */ {.State = CS_STATE_EMPTY, .Name = ""},
     /*   1 */ {.State = CS_STATE_EMPTY, .Name = ""},

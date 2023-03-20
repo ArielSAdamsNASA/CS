@@ -31,7 +31,7 @@
 #include "cs_platform_cfg.h"
 #include "cs_tbldefs.h"
 
-CS_Def_EepromMemory_Table_Entry_t CS_EepromTable[CS_MAX_NUM_EEPROM_TABLE_ENTRIES] = {
+CS_EepromTable_Array_t CS_EepromTable = {
     /*         State           Filler   StartAddress     NumBytes */
     /*  0 */
     {.State = CS_STATE_EMPTY, .Filler16 = 0x1234, .StartAddress = 0x00000000, .NumBytesToChecksum = 0x00000000},

@@ -52,7 +52,7 @@ void CS_DisableMemoryCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -82,7 +82,7 @@ void CS_EnableMemoryCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -115,7 +115,7 @@ void CS_ReportBaselineEntryIDMemoryCmd(const CS_EntryCmd_t *CmdPtr)
     uint16                             State          = CS_STATE_EMPTY;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         EntryID = CmdPtr->EntryID;
 
@@ -172,7 +172,7 @@ void CS_RecomputeBaselineMemoryCmd(const CS_EntryCmd_t *CmdPtr)
     uint16          State          = CS_STATE_EMPTY;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         EntryID = CmdPtr->EntryID;
 
@@ -253,7 +253,7 @@ void CS_EnableEntryIDMemoryCmd(const CS_EntryCmd_t *CmdPtr)
     uint16                             State          = CS_STATE_EMPTY;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -318,7 +318,7 @@ void CS_DisableEntryIDMemoryCmd(const CS_EntryCmd_t *CmdPtr)
     uint16                             State          = CS_STATE_EMPTY;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -387,7 +387,7 @@ void CS_GetEntryIDMemoryCmd(const CS_GetEntryIDCmd_t *CmdPtr)
     bool                               EntryFound          = false;
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         StartOfResultsTable = CS_AppData.ResMemoryTblPtr;
 

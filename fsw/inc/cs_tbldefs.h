@@ -62,7 +62,9 @@
  ** Type definitions
  **
  **************************************************************************/
-
+#ifdef CFE_EDS_ENABLED_BUILD
+#include "cs_eds_typedefs.h"
+#else
 /**
  * \brief Data structure for the Eeprom or Memory definition table
  */
@@ -73,7 +75,7 @@ typedef struct
     uint16  Filler16;           /** <\brief Padding */
     uint32  NumBytesToChecksum; /**< \brief The number of Bytes to Checksum */
 } CS_Def_EepromMemory_Table_Entry_t;
-
+#endif
 /**
  * \brief Data structure for the Eeporom or Memory results table
  */
@@ -89,6 +91,9 @@ typedef struct
     uint32  Filler32;           /**< \brief Padding */
 } CS_Res_EepromMemory_Table_Entry_t;
 
+#ifdef CFE_EDS_ENABLED_BUILD
+#include "cs_eds_typedefs.h"
+#else
 /**
  * \brief Data structure for the Tables definition table
  */
@@ -97,7 +102,7 @@ typedef struct
     uint16 State;                           /**< \brief Uses the CS_STATE_... defines from above */
     char   Name[CFE_TBL_MAX_FULL_NAME_LEN]; /**< \brief name of the table */
 } CS_Def_Tables_Table_Entry_t;
-
+#endif
 /**
  * \brief Data structure for the App definition table
  */
@@ -239,7 +244,7 @@ int32 CS_ValidateAppChecksumDefinitionTable(void *TblPtr);
  *  \param [in]    NumEntries          The number of entries in the table
  *  \param [in]    Table               The specific table we are operating on
  */
-void CS_ProcessNewEepromMemoryDefinitionTable(const CS_Def_EepromMemory_Table_Entry_t *DefinitionTblPtr,
+void CS_ProcessNewEepromMemoryDefinitionTable(const CS_EepromTableEntry_t *DefinitionTblPtr,
                                               const CS_Res_EepromMemory_Table_Entry_t *ResultsTblPtr,
                                               const uint16 NumEntries, const uint16 Table);
 
@@ -262,7 +267,7 @@ void CS_ProcessNewEepromMemoryDefinitionTable(const CS_Def_EepromMemory_Table_En
  *                                     (#CS_Res_Tables_Table_Entry_t)
  *                                     to operate on
  */
-void CS_ProcessNewTablesDefinitionTable(const CS_Def_Tables_Table_Entry_t *DefinitionTblPtr,
+void CS_ProcessNewTablesDefinitionTable(const CS_TablesTableEntry_t *DefinitionTblPtr,
                                         const CS_Res_Tables_Table_Entry_t *ResultsTblPtr);
 
 /**
@@ -284,7 +289,7 @@ void CS_ProcessNewTablesDefinitionTable(const CS_Def_Tables_Table_Entry_t *Defin
  *                                     (#CS_Res_App_Table_Entry_t)
  *                                     to operate on
  */
-void CS_ProcessNewAppDefinitionTable(const CS_Def_App_Table_Entry_t *DefinitionTblPtr,
+void CS_ProcessNewAppDefinitionTable(const CS_AppTableEntry_t *DefinitionTblPtr,
                                      const CS_Res_App_Table_Entry_t *ResultsTblPtr);
 
 /**

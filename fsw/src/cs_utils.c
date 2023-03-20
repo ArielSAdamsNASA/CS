@@ -218,10 +218,10 @@ bool CS_GetTableResTblEntryByName(CS_Res_Tables_Table_Entry_t **EntryPtr, const 
 /* CS Get the Defintion Table Entry info of a table by its name      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-bool CS_GetTableDefTblEntryByName(CS_Def_Tables_Table_Entry_t **EntryPtr, const char *Name)
+bool CS_GetTableDefTblEntryByName(CS_TablesTableEntry_t **EntryPtr, const char *Name)
 {
-    CS_Def_Tables_Table_Entry_t *StartOfDefinitionTable = NULL;
-    CS_Def_Tables_Table_Entry_t *DefinitionEntry        = NULL;
+    CS_TablesTableEntry_t *StartOfDefinitionTable = NULL;
+    CS_TablesTableEntry_t *DefinitionEntry        = NULL;
     int32                        Loop;
     uint16                       MaxEntries;
     bool                         Status = false;
@@ -279,10 +279,10 @@ bool CS_GetAppResTblEntryByName(CS_Res_App_Table_Entry_t **EntryPtr, const char 
 /* CS Get the Definition Entry info of an app by its name          */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-bool CS_GetAppDefTblEntryByName(CS_Def_App_Table_Entry_t **EntryPtr, const char *Name)
+bool CS_GetAppDefTblEntryByName(CS_AppTableEntry_t **EntryPtr, const char *Name)
 {
-    CS_Def_App_Table_Entry_t *StartOfDefinitionTable = NULL;
-    CS_Def_App_Table_Entry_t *DefinitionEntry        = NULL;
+    CS_AppTableEntry_t        *StartOfDefinitionTable = NULL;
+    CS_AppTableEntry_t        *DefinitionEntry        = NULL;
     int32                     Loop;
     uint16                    MaxEntries;
     bool                      Status = false;

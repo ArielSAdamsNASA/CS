@@ -50,7 +50,7 @@ void CS_DisableTablesCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -79,7 +79,7 @@ void CS_EnableTablesCmd(const CS_NoArgsCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_NoArgsCmd_t);
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -111,7 +111,7 @@ void CS_ReportBaselineTablesCmd(const CS_TableNameCmd_t *CmdPtr)
     char                         Name[CFE_TBL_MAX_FULL_NAME_LEN];
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         strncpy(Name, CmdPtr->Name, sizeof(Name) - 1);
         Name[sizeof(Name) - 1] = '\0';
@@ -157,7 +157,7 @@ void CS_RecomputeBaselineTablesCmd(const CS_TableNameCmd_t *CmdPtr)
 
     /* Verify command packet length */
 
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_AppData.HkPacket.RecomputeInProgress == false && CS_AppData.HkPacket.OneShotInProgress == false)
         {
@@ -220,11 +220,11 @@ void CS_DisableNameTablesCmd(const CS_TableNameCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_TableNameCmd_t);
 
     CS_Res_Tables_Table_Entry_t *ResultsEntry;
-    CS_Def_Tables_Table_Entry_t *DefinitionEntry;
+    CS_TablesTableEntry_t *DefinitionEntry;
     char                         Name[CFE_TBL_MAX_FULL_NAME_LEN];
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {
@@ -275,11 +275,11 @@ void CS_EnableNameTablesCmd(const CS_TableNameCmd_t *CmdPtr)
     size_t ExpectedLength = sizeof(CS_TableNameCmd_t);
 
     CS_Res_Tables_Table_Entry_t *ResultsEntry;
-    CS_Def_Tables_Table_Entry_t *DefinitionEntry;
+    CS_TablesTableEntry_t *DefinitionEntry;
     char                         Name[CFE_TBL_MAX_FULL_NAME_LEN];
 
     /* Verify command packet length */
-    if (CS_VerifyCmdLength(&CmdPtr->CmdHeader.Msg, ExpectedLength))
+    if (CS_VerifyCmdLength(CFE_MSG_PTR(CmdPtr), ExpectedLength))
     {
         if (CS_CheckRecomputeOneshot() == false)
         {

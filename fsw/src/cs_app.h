@@ -141,26 +141,26 @@ typedef struct
     CFE_TBL_Handle_t DefAppTableHandle; /**< \brief Handle to the Apps definition table */
     CFE_TBL_Handle_t ResAppTableHandle; /**< \brief Hanlde to the Apps results table */
 
-    CS_Def_EepromMemory_Table_Entry_t *DefEepromTblPtr; /**< \brief Pointer to the Eeprom definition table */
+    CS_EepromTableEntry_t *DefEepromTblPtr; /**< \brief Pointer to the Eeprom definition table */
     CS_Res_EepromMemory_Table_Entry_t *ResEepromTblPtr; /**< \brief Pointer to the Eeprom results table */
 
-    CS_Def_EepromMemory_Table_Entry_t *DefMemoryTblPtr; /**< \brief Pointer to the Memory definition table */
+    CS_EepromTableEntry_t *DefMemoryTblPtr; /**< \brief Pointer to the Memory definition table */
     CS_Res_EepromMemory_Table_Entry_t *ResMemoryTblPtr; /**< \brief Pointer to the Memory results table */
 
-    CS_Def_Tables_Table_Entry_t *DefTablesTblPtr; /**< \brief Pointer to the Tables definition table */
+    CS_TablesTableEntry_t *DefTablesTblPtr; /**< \brief Pointer to the Tables definition table */
     CS_Res_Tables_Table_Entry_t *ResTablesTblPtr; /**< \brief Pointer to the Tables results table */
 
-    CS_Def_App_Table_Entry_t *DefAppTblPtr; /**< \brief Pointer to the Apps definition table */
+    CS_AppTableEntry_t *DefAppTblPtr; /**< \brief Pointer to the Apps definition table */
     CS_Res_App_Table_Entry_t *ResAppTblPtr; /**< \brief Pointer to the Apps results table */
 
     CS_Res_EepromMemory_Table_Entry_t OSCodeSeg;      /**< \brief OS code segment 'table' */
     CS_Res_EepromMemory_Table_Entry_t CfeCoreCodeSeg; /**< \brief cFE core code segment 'table' */
 
-    CS_Def_EepromMemory_Table_Entry_t
+    CS_EepromTableEntry_t
         DefaultEepromDefTable[CS_MAX_NUM_EEPROM_TABLE_ENTRIES]; /**< \brief Default Eeprom definition table */
-    CS_Def_EepromMemory_Table_Entry_t
+    CS_EepromTableEntry_t
         DefaultMemoryDefTable[CS_MAX_NUM_MEMORY_TABLE_ENTRIES]; /**< \brief Default Memory definition table */
-    CS_Def_Tables_Table_Entry_t
+    CS_TablesTableEntry_t
         DefaultTablesDefTable[CS_MAX_NUM_TABLES_TABLE_ENTRIES]; /**< \brief Default Tables definition table */
     CS_Def_App_Table_Entry_t
         DefaultAppDefTable[CS_MAX_NUM_APP_TABLE_ENTRIES]; /**< \brief Default Apps definition table */
